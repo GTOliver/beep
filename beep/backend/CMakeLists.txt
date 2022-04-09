@@ -1,7 +1,7 @@
 add_library(beep_backend STATIC
         include/beep_backend.h
         src/beep_backend.cpp
-        src/Beeper.cpp src/Beeper.h)
+        src/Beeper.cpp src/Beeper.h src/PaException.h src/PaException.cpp)
 
 set_target_properties(beep_backend PROPERTIES EXCLUDE_FROM_ALL TRUE)
 target_include_directories(beep_backend PUBLIC include)
