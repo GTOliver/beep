@@ -1,10 +1,13 @@
 #pragma once
 
-namespace bb
-{
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void init();
-void beep();
-void terminate();
+void beep_init();
+void beep_beep();
+void beep_terminate();
 
-} // namespace bb
+#ifdef __cplusplus
+};
+#endif

@@ -1,3 +1,0 @@
-add_executable(beep_test_app main.cpp)
-target_link_libraries(beep_test_app PRIVATE beep)
-set_target_properties(beep_test_app PROPERTIES EXCLUDE_FROM_ALL True)

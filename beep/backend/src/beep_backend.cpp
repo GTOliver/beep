@@ -1,23 +1,18 @@
 #include "beep_backend.h"
 
-#include <iostream>
+#include "Beeper.h"
 
-namespace bb
+void beep_init()
 {
-
-void init()
-{
-    std::cout << "BEEP: Init\n";
+    bb::Beeper::instance().start();
 }
 
-void terminate()
+void beep_terminate()
 {
-    std::cout << "BEEP: Terminate\n";
+    bb::Beeper::instance().stop();
 }
 
-void beep()
+void beep_beep()
 {
-    std::cout << "beep\n";
+    bb::Beeper::instance().beep();
 }
-
-} // namespace bb
