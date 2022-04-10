@@ -1,16 +1,17 @@
-option(BEEP "Enable the BEEP macros. If OFF, the macros do nothing." OFF)
+add_library(beep STATIC
+        include/beep.h
+        src/beep.cpp
+        src/Beeper.h
+        src/Beeper.cpp
+        src/PaException.h
+        src/PaException.cpp)
 
-add_library(beep
-        INTERFACE
-        include/beep.h)
+set_target_properties(beep PROPERTIES EXCLUDE_FROM_ALL TRUE)
+target_include_directories(beep PUBLIC include)
 
-target_include_directories(beep INTERFACE include)
+target_link_libraries(beep PRIVATE portaudio_static)
 
-if(BEEP)
-    message("Beep is on")
-    target_compile_definitions(beep INTERFACE USE_BEEP_BACKEND)
-    add_subdirectory(backend)
-    target_link_libraries(beep INTERFACE beep_backend)
-else()
-    message("Beep is off")
-endif()
+if (BUILD_TESTS)
+    add_executable(beep_test "test/test_dummy.cpp")
+    target_link_libraries(beep_test PRIVATE Catch2::Catch2)
+endif ()

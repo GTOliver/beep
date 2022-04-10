@@ -8,13 +8,23 @@ and keeps your release builds free of bloat.
 
 ## Usage
 
-Link against the `beep` library, and run CMake with
-`-DBEEP=ON`.
+This project can be used in two ways, either via the C API,
+or via macros which wrap around the C API. The benefit of using
+the macros is that they can be turned off at compile-time.
 
-Include the `beep.h` header, which defines several macros.
+### Beep Macros
+To use beeps, link against the `beep::beep_macros` and include the
+`beep_macros.h` header.
+
+This defines several macros which can be turned off at compile-time
+using the CMake option `-DBEEP=OFF`.
 
 Use the `BEEP()` macro throughout your code whenever you want to
 emit an audible beep.
 
 Before emitting any beeps, call the `BEEP_INIT()` macro, and call
 `BEEP_TERMINATE()` when you're done.
+
+### Beep C API
+To use the C API, link against the `beep::beep` target and include
+the `beep.h` header.

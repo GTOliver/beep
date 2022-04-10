@@ -1,4 +1,4 @@
-#include "beep.h"
+#include "beep_macros.h"
 
 #include <thread>
 
