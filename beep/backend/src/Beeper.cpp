@@ -1,7 +1,6 @@
 #include "Beeper.h"
 #include "PaException.h"
 
-
 namespace bb
 {
 
@@ -12,9 +11,11 @@ Beeper& Beeper::instance()
 }
 
 Beeper::Beeper()
-        : random_generator_(),
+        : random_device_{},
+          random_generator_(random_device_()),
           random_dist_{-0.5, 0.5},
-          beep_flag_(true)
+          beep_flag_(true),
+          audio_stream_{nullptr}
 {
     const auto err = Pa_Initialize();
     try {

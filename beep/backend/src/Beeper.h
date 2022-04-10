@@ -46,6 +46,7 @@ private:
 
     std::atomic_flag beep_flag_;
 
+    std::random_device random_device_;
     std::mt19937 random_generator_;
     std::uniform_real_distribution<float> random_dist_;
 };

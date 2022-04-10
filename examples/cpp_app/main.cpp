@@ -2,19 +2,19 @@
 
 #include <thread>
 
-void wait()
+template<typename T>
+void sleep(std::chrono::duration<T> duration)
 {
-    using namespace std::chrono_literals;
-    std::this_thread::sleep_for(1s);
+    std::this_thread::sleep_for(duration);
 }
 
 int main()
 {
+    using namespace std::chrono_literals;
     BEEP_INIT();
     BEEP();
-    wait();
+    sleep(1s);
     BEEP();
-    wait();
+    sleep(1s);
     BEEP_TERMINATE();
-    return 0;
 }

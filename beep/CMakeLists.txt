@@ -1,4 +1,4 @@
-option(BEEP "Enable the BEEP macros. If OFF, the macros do nothing.")
+option(BEEP "Enable the BEEP macros. If OFF, the macros do nothing." OFF)
 
 add_library(beep
         INTERFACE
