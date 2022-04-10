@@ -17,27 +17,14 @@ Beeper::Beeper()
           beep_flag_(true),
           audio_stream_{nullptr}
 {
-    const auto err = Pa_Initialize();
-    try {
-        check_pa_error(err);
-    } catch (const std::exception& error) {
-        // TODO: Handle error
-    }
-}
-
-Beeper::~Beeper()
-{
-    const auto err = Pa_Terminate();
-    try {
-        check_pa_error(err);
-    } catch (const std::exception& error) {
-        // TODO: Handle error
-    }
 }
 
 void Beeper::start()
 {
-    auto err = Pa_OpenDefaultStream(
+    auto err = Pa_Initialize();
+    check_pa_error(err);
+
+    err = Pa_OpenDefaultStream(
             &audio_stream_,
             0,
             1,
@@ -47,15 +34,28 @@ void Beeper::start()
             &Beeper::pa_callback,
             this);
     check_pa_error(err);
+
     err = Pa_StartStream(audio_stream_);
     check_pa_error(err);
 }
 
 void Beeper::stop()
 {
-    auto err = Pa_StopStream(audio_stream_);
-    check_pa_error(err);
-    err = Pa_CloseStream(audio_stream_);
+    try {
+        auto err = Pa_StopStream(audio_stream_);
+        check_pa_error(err);
+        err = Pa_CloseStream(audio_stream_);
+        check_pa_error(err);
+    } catch (const PaException& error) {
+        terminate();
+        throw;
+    }
+    terminate();
+}
+
+void Beeper::terminate()
+{
+    const auto err = Pa_Terminate();
     check_pa_error(err);
 }
 

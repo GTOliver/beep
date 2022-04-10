@@ -7,12 +7,14 @@ extern "C" {
 #ifdef USE_BEEP_BACKEND
 #include "beep_backend.h"
 #define BEEP_INIT() beep_init()
-#define BEEP() beep_beep()
 #define BEEP_TERMINATE() beep_terminate()
+#define BEEP() beep_beep()
+#define BEEP_GET_ERROR_MESSAGE(X) beep_get_error_message(X)
 #else
-#define BEEP_INIT()
-#define BEEP()
-#define BEEP_TERMINATE()
+#define BEEP_INIT() 0
+#define BEEP_TERMINATE() 0
+#define BEEP() 0
+#define BEEP_GET_ERROR_MESSAGE(X) "Beep not enabled"
 #endif
 
 #ifdef __cplusplus

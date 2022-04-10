@@ -25,7 +25,7 @@ public:
 private:
     Beeper();
 
-    ~Beeper();
+    static void terminate();
 
     static int pa_callback(
             const void* input_buffer,
