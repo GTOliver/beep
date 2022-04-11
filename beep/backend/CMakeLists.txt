@@ -13,10 +13,11 @@ if (NOT portaudio_POPULATED)
     add_subdirectory("${portaudio_SOURCE_DIR}" "${portaudio_BINARY_DIR}" EXCLUDE_FROM_ALL)
 endif()
 
-add_library(beep_backend SHARED
+add_library(beep_backend STATIC
         include/beep_backend.h
         src/beep_backend.cpp
-        src/Beeper.cpp src/Beeper.h
+        src/Beeper.h
+        src/Beeper.cpp
         src/PaException.h
         src/PaException.cpp)
 
