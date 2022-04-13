@@ -14,9 +14,11 @@ Beeper::Beeper()
         : random_device_{},
           random_generator_(random_device_()),
           random_dist_{-0.5, 0.5},
-          beep_flag_(true),
+          beep_flag_{},
           audio_stream_{nullptr}
 {
+    // Initialise flag to true
+    beep_flag_.test_and_set();
 }
 
 void Beeper::start()
