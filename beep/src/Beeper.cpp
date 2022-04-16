@@ -1,5 +1,6 @@
 #include "Beeper.h"
 #include "PaException.h"
+#include "Common.h"
 
 namespace bb
 {
@@ -15,7 +16,8 @@ Beeper::Beeper()
           random_generator_(random_device_()),
           random_dist_{-0.5, 0.5},
           beep_flag_{},
-          audio_stream_{nullptr}
+          audio_stream_{nullptr},
+          envelope_{1000}
 {
     // Initialise flag to true
     beep_flag_.test_and_set();
@@ -86,20 +88,18 @@ int Beeper::pa_callback(
 int Beeper::callback(
         [[maybe_unused]] const void* input_buffer,
         void* output_buffer,
-        unsigned long frames_per_buffer,
+        bb::ulong frames_per_buffer,
         [[maybe_unused]] const PaStreamCallbackTimeInfo* info,
         [[maybe_unused]] PaStreamCallbackFlags status_flags) noexcept
 {
     auto f_output_buffer = static_cast<float*>(output_buffer);
 
-    if (beep_flag_.test_and_set()) {
-        for (unsigned long i = 0; i < frames_per_buffer; ++i)
-            f_output_buffer[i] = 0.0;
-    } else {
-        for (unsigned long i = 0; i < frames_per_buffer; ++i)
-            f_output_buffer[i] = random_dist_(random_generator_);
-    }
+    for (ulong i = 0; i < frames_per_buffer; ++i)
+        f_output_buffer[i] = random_dist_(random_generator_);
 
+    bool beep_triggered = !beep_flag_.test_and_set();
+
+    envelope_.process(f_output_buffer, frames_per_buffer, beep_triggered);
     return 0;
 }
 

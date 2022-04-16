@@ -1,8 +1,11 @@
 #pragma once
 
-#include "portaudio.h"
 #include <atomic>
 #include <random>
+
+#include "portaudio.h"
+
+#include "Envelope.h"
 
 namespace bb
 {
@@ -49,6 +52,8 @@ private:
     std::random_device random_device_;
     std::mt19937 random_generator_;
     std::uniform_real_distribution<float> random_dist_;
+
+    Envelope envelope_;
 };
 
 } // namespace bb
