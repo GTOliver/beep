@@ -110,12 +110,15 @@ int Beeper::callback(
 {
     auto f_output_buffer = static_cast<float*>(output_buffer);
 
-    voice_->process(f_output_buffer, frames_per_buffer);
-
     bool beep_triggered = !beep_flag_.test_and_set();
 
-    envelope_->process(f_output_buffer, frames_per_buffer, beep_triggered);
-    gain_.process(f_output_buffer, frames_per_buffer);
+    if (!beep_triggered && envelope_->is_muted()) {
+        muter_.process(f_output_buffer, frames_per_buffer);
+    } else {
+        voice_->process(f_output_buffer, frames_per_buffer);
+        envelope_->process(f_output_buffer, frames_per_buffer, beep_triggered);
+        gain_.process(f_output_buffer, frames_per_buffer);
+    }
 
     return 0;
 }

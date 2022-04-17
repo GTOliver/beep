@@ -55,6 +55,7 @@ private:
 
     std::unique_ptr<Voice> voice_;
     Gain gain_;
+    Gain muter_{0};
     std::unique_ptr<Envelope> envelope_;
 };
 

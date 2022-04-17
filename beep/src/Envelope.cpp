@@ -46,4 +46,9 @@ void Envelope::process(float* buffer, ulong buffer_size, bool trigger)
     }
 }
 
+bool Envelope::is_muted()
+{
+    return state_ == State::Off;
+}
+
 } // namespace bb

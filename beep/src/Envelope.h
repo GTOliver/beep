@@ -14,6 +14,8 @@ public:
 
     void process(float* buffer, ulong buffer_size, bool trigger);
 
+    bool is_muted();
+
 private:
     enum class State
     {
