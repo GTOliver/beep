@@ -3,9 +3,10 @@
 namespace bb
 {
 
-Envelope::Envelope(ulong decay)
-        : playing_{false},
-          envelope_value_{0.0f},
+Envelope::Envelope(ulong attack, ulong decay)
+        : envelope_value_{0.0f},
+          state_{State::Off},
+          attack_rate_{1.0f / static_cast<float>(attack)},
           decay_rate_{1.0f / static_cast<float>(decay)}
 {
 }
@@ -13,25 +14,34 @@ Envelope::Envelope(ulong decay)
 void Envelope::process(float* buffer, ulong buffer_size, bool trigger)
 {
     if (trigger) {
-        playing_ = true;
-        envelope_value_ = 1.0f + decay_rate_;
+        state_ = State::Attacking;
     }
 
-    if (!playing_) {
+    if (state_ == State::Off) {
         for (ulong i = 0; i < buffer_size; ++i) {
             buffer[i] = 0.0;
         }
     } else {
         for (ulong i = 0; i < buffer_size; ++i) {
-            if (!playing_) {
-                buffer[i] = 0.0;
-            } else {
-                envelope_value_ -= decay_rate_;
-                buffer[i] *= envelope_value_;
-                if (envelope_value_ <= 0.0) {
-                    playing_ = false;
-                }
+            switch (state_) {
+                case State::Off:
+                    break;
+                case State::Attacking:
+                    envelope_value_ += attack_rate_;
+                    if (envelope_value_ >= 1.0f) {
+                        envelope_value_ = 1.0f;
+                        state_ = State::Decaying;
+                    }
+                    break;
+                case State::Decaying:
+                    envelope_value_ -= decay_rate_;
+                    if (envelope_value_ <= 0.0f) {
+                        envelope_value_ = 0.0f;
+                        state_ = State::Off;
+                    }
+                    break;
             }
+            buffer[i] *= envelope_value_;
         }
     }
 }

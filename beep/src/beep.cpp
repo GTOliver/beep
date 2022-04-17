@@ -5,8 +5,10 @@
 
 beep_error beep_init()
 {
+    bb::Beeper& instance = bb::Beeper::instance();
+    instance.prepare(44100, 880, 10, 200);
     try {
-        bb::Beeper::instance().start();
+        instance.start();
     } catch (const std::exception& exc) {
         return BeepError_Error;
     }

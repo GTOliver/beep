@@ -10,14 +10,22 @@ namespace bb
 class Envelope
 {
 public:
-    explicit Envelope(ulong decay);
+    Envelope(ulong attack, ulong decay);
 
     void process(float* buffer, ulong buffer_size, bool trigger);
 
 private:
-    bool playing_;
-    float envelope_value_;
+    enum class State
+    {
+        Off,
+        Attacking,
+        Decaying
+    };
 
+    float envelope_value_;
+    State state_;
+
+    float attack_rate_;
     float decay_rate_;
 };
 

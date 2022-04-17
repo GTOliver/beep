@@ -16,6 +16,8 @@ class Beeper
 public:
     static Beeper& instance();
 
+    void prepare(ulong sample_rate, float beep_frequency, float attack, float decay);
+
     void start();
 
     void stop();
@@ -46,13 +48,14 @@ private:
             [[maybe_unused]] const PaStreamCallbackTimeInfo* info,
             [[maybe_unused]] PaStreamCallbackFlags status_flags) noexcept;
 
+    ulong sample_rate_;
     PaStream* audio_stream_;
 
     std::atomic_flag beep_flag_;
 
     std::unique_ptr<Voice> voice_;
     Gain gain_;
-    Envelope envelope_;
+    std::unique_ptr<Envelope> envelope_;
 };
 
 } // namespace bb

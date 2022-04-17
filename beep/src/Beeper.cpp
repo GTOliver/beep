@@ -3,7 +3,6 @@
 #include "Beeper.h"
 #include "PaException.h"
 #include "Common.h"
-#include "voices/NoiseVoice.h"
 #include "voices/SineVoice.h"
 
 namespace bb
@@ -16,14 +15,28 @@ Beeper& Beeper::instance()
 }
 
 Beeper::Beeper()
-        : beep_flag_{},
+        : sample_rate_{0},
           audio_stream_{nullptr},
+          beep_flag_{},
           gain_(0.1f),
-          voice_{std::make_unique<SineVoice>(440, 44100)},
-          envelope_{1000}
+          voice_{nullptr},
+          envelope_{nullptr}
 {
     // Initialise flag to true
     beep_flag_.test_and_set();
+}
+
+void Beeper::prepare(ulong sample_rate, float beep_frequency, float attack, float decay)
+{
+    sample_rate_ = sample_rate;
+    voice_ = std::make_unique<SineVoice>(beep_frequency, sample_rate);
+
+    float sample_duration_ms = 1000.0f / static_cast<float>(sample_rate);
+
+    auto attack_samples = static_cast<ulong>(attack / sample_duration_ms);
+    auto decay_samples = static_cast<ulong>(decay / sample_duration_ms);
+
+    envelope_ = std::make_unique<Envelope>(attack_samples, decay_samples);
 }
 
 void Beeper::start()
@@ -36,7 +49,7 @@ void Beeper::start()
             0,
             1,
             paFloat32,
-            44100,
+            static_cast<double>(sample_rate_),
             512,
             &Beeper::pa_callback,
             this);
@@ -101,7 +114,7 @@ int Beeper::callback(
 
     bool beep_triggered = !beep_flag_.test_and_set();
 
-    envelope_.process(f_output_buffer, frames_per_buffer, beep_triggered);
+    envelope_->process(f_output_buffer, frames_per_buffer, beep_triggered);
     gain_.process(f_output_buffer, frames_per_buffer);
 
     return 0;
