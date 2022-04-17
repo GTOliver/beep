@@ -8,7 +8,13 @@ add_library(beep STATIC
         src/Envelope.cpp
         src/PaException.h
         src/PaException.cpp
-        )
+        src/Gain.cpp
+        src/Gain.h
+        src/voices/Voice.h
+        src/voices/NoiseVoice.h
+        src/voices/NoiseVoice.cpp
+        src/voices/SineVoice.cpp
+        src/voices/SineVoice.h)
 
 set_target_properties(beep PROPERTIES EXCLUDE_FROM_ALL TRUE)
 target_include_directories(beep PUBLIC include)

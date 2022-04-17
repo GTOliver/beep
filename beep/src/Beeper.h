@@ -1,11 +1,12 @@
 #pragma once
 
 #include <atomic>
-#include <random>
 
 #include "portaudio.h"
 
 #include "Envelope.h"
+#include "Gain.h"
+#include "voices/Voice.h"
 
 namespace bb
 {
@@ -49,10 +50,8 @@ private:
 
     std::atomic_flag beep_flag_;
 
-    std::random_device random_device_;
-    std::mt19937 random_generator_;
-    std::uniform_real_distribution<float> random_dist_;
-
+    std::unique_ptr<Voice> voice_;
+    Gain gain_;
     Envelope envelope_;
 };
 

@@ -1,6 +1,10 @@
+#include <memory>
+
 #include "Beeper.h"
 #include "PaException.h"
 #include "Common.h"
+#include "voices/NoiseVoice.h"
+#include "voices/SineVoice.h"
 
 namespace bb
 {
@@ -12,11 +16,10 @@ Beeper& Beeper::instance()
 }
 
 Beeper::Beeper()
-        : random_device_{},
-          random_generator_(random_device_()),
-          random_dist_{-0.5, 0.5},
-          beep_flag_{},
+        : beep_flag_{},
           audio_stream_{nullptr},
+          gain_(0.1f),
+          voice_{std::make_unique<SineVoice>(440, 44100)},
           envelope_{1000}
 {
     // Initialise flag to true
@@ -94,12 +97,13 @@ int Beeper::callback(
 {
     auto f_output_buffer = static_cast<float*>(output_buffer);
 
-    for (ulong i = 0; i < frames_per_buffer; ++i)
-        f_output_buffer[i] = random_dist_(random_generator_);
+    voice_->process(f_output_buffer, frames_per_buffer);
 
     bool beep_triggered = !beep_flag_.test_and_set();
 
     envelope_.process(f_output_buffer, frames_per_buffer, beep_triggered);
+    gain_.process(f_output_buffer, frames_per_buffer);
+
     return 0;
 }
 
