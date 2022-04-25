@@ -1,17 +1,19 @@
 #pragma once
 
 #include "../Common.h"
-#include "Voice.h"
+#include "Oscillator.h"
 
 namespace bb
 {
 
-class SineVoice: public Voice
+class SineOscillator: public Oscillator
 {
 public:
-    explicit SineVoice(float frequency, ulong sample_rate);
+    explicit SineOscillator(float frequency, ulong sample_rate);
 
     void process(float* buffer, ulong buffer_size) override;
+
+    void reset() override;
 
 private:
     float phase_change_per_sample_;

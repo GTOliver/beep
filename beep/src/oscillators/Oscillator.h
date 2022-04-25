@@ -5,17 +5,14 @@
 namespace bb
 {
 
-class Voice
+class Oscillator
 {
 public:
-    virtual ~Voice() = default;
+    virtual ~Oscillator() = default;
 
     virtual void process(float* buffer, ulong buffer_size) = 0;
 
-    virtual bool is_playing() = 0;
-
-    virtual void beep() = 0;
+    virtual void reset() = 0;
 };
 
 } // namespace bb
-

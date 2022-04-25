@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common.h"
+#include "BeepMessage.h"
 
 #include "readerwriterqueue.h"
 
@@ -8,11 +9,6 @@ namespace mc = moodycamel;
 
 namespace bb
 {
-
-struct BeepMessage
-{
-    BeepTime timestamp_;
-};
 
 class BeepCollector
 {

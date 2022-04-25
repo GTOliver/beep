@@ -2,17 +2,19 @@
 
 #include <random>
 
-#include "Voice.h"
+#include "Oscillator.h"
 
 namespace bb
 {
 
-class NoiseVoice: public Voice
+class NoiseOscillator: public Oscillator
 {
 public:
-    NoiseVoice();
+    NoiseOscillator();
 
     void process(float* buffer, ulong buffer_size) override;
+
+    void reset() override;
 
 private:
     std::random_device random_device_;

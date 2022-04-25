@@ -3,7 +3,6 @@
 #include "Beeper.h"
 #include "PaException.h"
 #include "Common.h"
-#include "voices/SineVoice.h"
 
 namespace bb
 {
@@ -19,23 +18,14 @@ Beeper::Beeper()
           audio_stream_{nullptr},
           beep_collector_{1024},
           message_buffer_{1024},
-          gain_(0.1f),
-          voice_{nullptr},
-          envelope_{nullptr}
+          gain_{0.1}
 {
 }
 
 void Beeper::prepare(ulong sample_rate, float beep_frequency, float attack, float decay)
 {
     sample_rate_ = sample_rate;
-    voice_ = std::make_unique<SineVoice>(beep_frequency, sample_rate);
-
-    float sample_duration_ms = 1000.0f / static_cast<float>(sample_rate);
-
-    auto attack_samples = static_cast<ulong>(attack / sample_duration_ms);
-    auto decay_samples = static_cast<ulong>(decay / sample_duration_ms);
-
-    envelope_ = std::make_unique<Envelope>(attack_samples, decay_samples);
+    synth_.prepare(sample_rate, beep_frequency, attack, decay);
 }
 
 void Beeper::start()
@@ -108,24 +98,25 @@ int Beeper::pa_callback(
 int Beeper::callback(
         [[maybe_unused]] const void* input_buffer,
         void* output_buffer,
-        bb::ulong frames_per_buffer,
+        ulong frames_per_buffer,
         [[maybe_unused]] const PaStreamCallbackTimeInfo* info,
         [[maybe_unused]] PaStreamCallbackFlags status_flags) noexcept
 {
     auto f_output_buffer = static_cast<float*>(output_buffer);
 
+    // Collect beep messages from the beep collector
     int n_beeps = 0;
     beep_collector_.get_beeps(message_buffer_.data(), &n_beeps);
 
-    bool beep_triggered = n_beeps > 0;
+    // TODO: Figure out which messages relate to current buffer and
+    // TODO: Only send them across to the synth
 
-    if (!beep_triggered && envelope_->is_muted()) {
-        muter_.process(f_output_buffer, frames_per_buffer);
-    } else {
-        voice_->process(f_output_buffer, frames_per_buffer);
-        envelope_->process(f_output_buffer, frames_per_buffer, beep_triggered);
-        gain_.process(f_output_buffer, frames_per_buffer);
-    }
+    // Let the synth fill the output buffer based on the beep messages
+    synth_.process(f_output_buffer, frames_per_buffer,
+                   message_buffer_.data(), n_beeps);
+
+    // Overall volume adjustment
+    gain_.process(f_output_buffer, frames_per_buffer);
 
     return 0;
 }

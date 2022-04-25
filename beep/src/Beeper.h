@@ -5,11 +5,10 @@
 
 #include "portaudio.h"
 
+#include "BeepSynth.h"
 #include "BeepCollector.h"
 #include "Common.h"
-#include "Envelope.h"
 #include "Gain.h"
-#include "voices/Voice.h"
 
 namespace bb
 {
@@ -58,11 +57,9 @@ private:
 
     BeepCollector beep_collector_;
     std::vector<BeepMessage> message_buffer_;
-
-    std::unique_ptr<Voice> voice_;
+    BeepSynth synth_;
     Gain gain_;
-    Gain muter_{0};
-    std::unique_ptr<Envelope> envelope_;
+
 };
 
 } // namespace bb
