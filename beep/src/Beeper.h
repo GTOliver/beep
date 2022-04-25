@@ -1,9 +1,12 @@
 #pragma once
 
 #include <atomic>
+#include <vector>
 
 #include "portaudio.h"
 
+#include "BeepCollector.h"
+#include "Common.h"
 #include "Envelope.h"
 #include "Gain.h"
 #include "voices/Voice.h"
@@ -23,6 +26,8 @@ public:
     void stop();
 
     void beep();
+
+    BeepTime get_now();
 
     Beeper(const Beeper&) = delete;
 
@@ -51,7 +56,8 @@ private:
     ulong sample_rate_;
     PaStream* audio_stream_;
 
-    std::atomic_flag beep_flag_;
+    BeepCollector beep_collector_;
+    std::vector<BeepMessage> message_buffer_;
 
     std::unique_ptr<Voice> voice_;
     Gain gain_;

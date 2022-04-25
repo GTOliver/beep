@@ -3,6 +3,8 @@ add_library(beep STATIC
         src/beep.cpp
         src/Beeper.h
         src/Beeper.cpp
+        src/BeepCollector.h
+        src/BeepCollector.cpp
         src/Common.h
         src/Envelope.h
         src/Envelope.cpp
@@ -19,7 +21,10 @@ add_library(beep STATIC
 set_target_properties(beep PROPERTIES EXCLUDE_FROM_ALL TRUE)
 target_include_directories(beep PUBLIC include)
 
-target_link_libraries(beep PRIVATE portaudio_static)
+target_link_libraries(beep
+        PRIVATE
+        portaudio_static
+        readerwriterqueue)
 
 if (BUILD_TESTS)
     add_executable(beep_test "test/test_dummy.cpp")

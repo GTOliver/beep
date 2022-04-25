@@ -17,13 +17,12 @@ Beeper& Beeper::instance()
 Beeper::Beeper()
         : sample_rate_{0},
           audio_stream_{nullptr},
-          beep_flag_{},
+          beep_collector_{1024},
+          message_buffer_{1024},
           gain_(0.1f),
           voice_{nullptr},
           envelope_{nullptr}
 {
-    // Initialise flag to true
-    beep_flag_.test_and_set();
 }
 
 void Beeper::prepare(ulong sample_rate, float beep_frequency, float attack, float decay)
@@ -81,7 +80,12 @@ void Beeper::terminate()
 
 void Beeper::beep()
 {
-    beep_flag_.clear();
+    beep_collector_.add_beep(BeepMessage{get_now()});
+}
+
+BeepTime Beeper::get_now()
+{
+    return Pa_GetStreamTime(audio_stream_);
 }
 
 int Beeper::pa_callback(
@@ -110,7 +114,10 @@ int Beeper::callback(
 {
     auto f_output_buffer = static_cast<float*>(output_buffer);
 
-    bool beep_triggered = !beep_flag_.test_and_set();
+    int n_beeps = 0;
+    beep_collector_.get_beeps(message_buffer_.data(), &n_beeps);
+
+    bool beep_triggered = n_beeps > 0;
 
     if (!beep_triggered && envelope_->is_muted()) {
         muter_.process(f_output_buffer, frames_per_buffer);
