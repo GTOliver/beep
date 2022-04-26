@@ -1,4 +1,4 @@
-#include "beep_macros.h"
+#include "beeppp.h"
 
 #include <thread>
 
@@ -11,10 +11,9 @@ void sleep(std::chrono::duration<T> duration)
 int main()
 {
     using namespace std::chrono_literals;
-    BEEP_INIT();
-    BEEP();
+    bpp::ScopedBeeper beeper{};
+    bpp::beep();
     sleep(1s);
-    BEEP_AT(440.0f);
+    bpp::beep();
     sleep(1s);
-    BEEP_TERMINATE();
 }
