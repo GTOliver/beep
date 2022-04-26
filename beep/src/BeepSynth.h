@@ -16,14 +16,16 @@ class BeepSynth
 public:
     BeepSynth();
 
-    //void prepare(ulong sample_rate, float beep_frequency, float attack, float decay);
-
     void prepare(ulong sample_rate);
 
     void process(float* output_buffer, ulong buffer_size,
-                 BeepMessage* beep_messages, int n_messages);
+                 BeepMessage* beep_messages, int n_messages, BeepTime buffer_start_time);
 
 private:
+    void process(float* output_buffer, ulong buffer_size);
+
+    void beep(BeepMessage beep);
+
     ulong sample_rate_;
     std::unique_ptr<Voice> voice_;
 };

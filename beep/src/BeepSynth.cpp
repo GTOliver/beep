@@ -3,6 +3,8 @@
 #include "oscillators/SineOscillator.h"
 #include "voices/OscillatorVoice.h"
 
+#include <algorithm>
+
 namespace bb
 {
 
@@ -27,18 +29,39 @@ void BeepSynth::prepare(ulong sample_rate)
 }
 
 void BeepSynth::process(float* output_buffer, ulong buffer_size,
-                        BeepMessage* beep_messages, int n_messages)
+                        BeepMessage* beep_messages, int n_messages, BeepTime buffer_start_time)
 {
     // Clear the output buffer
     for (ulong i = 0; i < buffer_size; ++i) {
         output_buffer[i] = 0.0f;
     }
 
-    bool beep_triggered = n_messages > 0;
+    auto buffer_duration = static_cast<double>(buffer_size) / static_cast<double>(sample_rate_);
 
-    if (beep_triggered)
-        voice_->beep(beep_messages[0]);
+    int current_position = 0;
 
+    for (int i = 0; i < n_messages; ++i) {
+        auto fraction = (beep_messages[i].timestamp - buffer_start_time) / buffer_duration;
+
+        // This should never do anything
+        fraction = std::clamp(fraction, 0.0, 1.0);
+
+        int message_sample_index = static_cast<int>(fraction * static_cast<double>(buffer_size - 1));
+
+        // Process up to sample with beep in it
+        process(output_buffer + current_position, message_sample_index - current_position);
+        beep(beep_messages[i]);
+    }
+    process(output_buffer + current_position, buffer_size - current_position);
+}
+
+void BeepSynth::beep(BeepMessage beep)
+{
+    voice_->beep(beep);
+}
+
+void BeepSynth::process(float* output_buffer, ulong buffer_size)
+{
     voice_->process(output_buffer, buffer_size);
 }
 

@@ -1,5 +1,3 @@
-#include <memory>
-
 #include "Beeper.h"
 #include "PaException.h"
 #include "Common.h"
@@ -16,8 +14,9 @@ Beeper& Beeper::instance()
 Beeper::Beeper()
         : sample_rate_{0},
           audio_stream_{nullptr},
+          latency_{nullptr},
           beep_collector_{1024},
-          message_buffer_{1024},
+          beep_buffer_{1024},
           gain_{0.1}
 {
 }
@@ -44,6 +43,9 @@ void Beeper::start()
             this);
     check_pa_error(err);
 
+    const auto stream_info = Pa_GetStreamInfo(audio_stream_);
+    latency_ = &(stream_info->outputLatency);
+
     err = Pa_StartStream(audio_stream_);
     check_pa_error(err);
 }
@@ -55,6 +57,7 @@ void Beeper::stop()
         check_pa_error(err);
         err = Pa_CloseStream(audio_stream_);
         check_pa_error(err);
+        latency_ = nullptr;
     } catch (const PaException& error) {
         terminate();
         throw;
@@ -109,16 +112,21 @@ int Beeper::callback(
 {
     auto f_output_buffer = static_cast<float*>(output_buffer);
 
-    // Collect beep messages from the beep collector
-    int n_beeps = 0;
-    beep_collector_.get_beeps(message_buffer_.data(), &n_beeps);
+    double buffer_duration = static_cast<double>(frames_per_buffer) / static_cast<double>(sample_rate_);
+    BeepTime buffer_start_time = info->outputBufferDacTime;
+    BeepTime buffer_end_emission_time = buffer_start_time + buffer_duration;
 
-    // TODO: Figure out which messages relate to current buffer and
-    // TODO: Only send them across to the synth
+    // Collect beep messages from the beep collector
+    int n_beeps = beep_collector_.get_beeps(beep_buffer_.data(), buffer_end_emission_time - *latency_);
+
+    // Account for latency by augmenting the timestamps
+    for (int i = 0; i < n_beeps; ++i) {
+        beep_buffer_[i].timestamp += *latency_;
+    }
 
     // Let the synth fill the output buffer based on the beep messages
     synth_.process(f_output_buffer, frames_per_buffer,
-                   message_buffer_.data(), n_beeps);
+                   beep_buffer_.data(), n_beeps, buffer_start_time);
 
     // Overall volume adjustment
     gain_.process(f_output_buffer, frames_per_buffer);

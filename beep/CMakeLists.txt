@@ -1,8 +1,8 @@
 add_library(beep STATIC
         include/beep.h
         src/beep.cpp
-        src/BeepCollector.h
-        src/BeepCollector.cpp
+        src/BeepQueue.h
+        src/BeepQueue.cpp
         src/Beeper.h
         src/Beeper.cpp
         src/BeepSynth.h

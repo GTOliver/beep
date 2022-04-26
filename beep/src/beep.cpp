@@ -6,7 +6,6 @@
 beep_error beep_init()
 {
     bb::Beeper& instance = bb::Beeper::instance();
-    //instance.prepare(44100, 880, 10, 200);
     instance.prepare(44100);
     try {
         instance.start();

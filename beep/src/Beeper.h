@@ -6,7 +6,7 @@
 #include "portaudio.h"
 
 #include "BeepSynth.h"
-#include "BeepCollector.h"
+#include "BeepQueue.h"
 #include "Common.h"
 #include "Gain.h"
 
@@ -56,9 +56,10 @@ private:
 
     ulong sample_rate_;
     PaStream* audio_stream_;
+    const PaTime* latency_;
 
-    BeepCollector beep_collector_;
-    std::vector<BeepMessage> message_buffer_;
+    BeepQueue beep_collector_;
+    std::vector<BeepMessage> beep_buffer_;
     BeepSynth synth_;
     Gain gain_;
 
