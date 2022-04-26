@@ -18,6 +18,8 @@ beep_error beep_terminate();
 
 beep_error beep_beep();
 
+beep_error beep_beep_at(float frequency);
+
 const char* beep_get_error_message(beep_error error);
 
 #ifdef __cplusplus

@@ -36,6 +36,16 @@ beep_error beep_beep()
     return BeepError_NoError;
 }
 
+beep_error beep_beep_at(float freq)
+{
+    try {
+        bb::Beeper::instance().beep_at(freq);
+    } catch (const std::exception& exc) {
+        return BeepError_Error;
+    }
+    return BeepError_NoError;
+}
+
 const char* beep_get_error_message(beep_error error)
 {
     switch (error) {

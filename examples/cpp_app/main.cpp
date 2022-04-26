@@ -14,7 +14,7 @@ int main()
     BEEP_INIT();
     BEEP();
     sleep(1s);
-    BEEP();
+    BEEP_AT(440.0f);
     sleep(1s);
     BEEP_TERMINATE();
 }

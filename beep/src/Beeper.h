@@ -26,6 +26,8 @@ public:
 
     void beep();
 
+    void beep_at(float frequency);
+
     BeepTime get_now();
 
     Beeper(const Beeper&) = delete;

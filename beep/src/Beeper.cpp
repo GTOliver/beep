@@ -70,7 +70,12 @@ void Beeper::terminate()
 
 void Beeper::beep()
 {
-    beep_collector_.add_beep(BeepMessage{get_now(), 880.0f});
+    beep_at(880.0f);
+}
+
+void Beeper::beep_at(float frequency)
+{
+    beep_collector_.add_beep(BeepMessage{get_now(), frequency});
 }
 
 BeepTime Beeper::get_now()
