@@ -3,7 +3,7 @@
 #include <exception>
 #include "Beeper.h"
 
-beep_error beep_init()
+BeepError beep_init()
 {
     bb::Beeper& instance = bb::Beeper::instance();
     instance.prepare(44100);
@@ -15,7 +15,7 @@ beep_error beep_init()
     return BeepError_NoError;
 }
 
-beep_error beep_terminate()
+BeepError beep_terminate()
 {
     try {
         bb::Beeper::instance().stop();
@@ -25,7 +25,7 @@ beep_error beep_terminate()
     return BeepError_NoError;
 }
 
-beep_error beep_beep()
+BeepError beep_beep()
 {
     try {
         bb::Beeper::instance().beep();
@@ -35,7 +35,7 @@ beep_error beep_beep()
     return BeepError_NoError;
 }
 
-beep_error beep_beep_at(float freq)
+BeepError beep_beep_at(float freq)
 {
     try {
         bb::Beeper::instance().beep_at(freq);
@@ -45,7 +45,7 @@ beep_error beep_beep_at(float freq)
     return BeepError_NoError;
 }
 
-const char* beep_get_error_message(beep_error error)
+const char* beep_get_error_message(BeepError error)
 {
     switch (error) {
         case BeepError_NoError:

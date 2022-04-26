@@ -4,23 +4,21 @@
 extern "C" {
 #endif
 
-typedef int beep_error;
-
-typedef enum BeepErrorCode_
+typedef enum BeepError_
 {
     BeepError_NoError = 0,
     BeepError_Error = 1
-} BeepErrorCode;
+} BeepError;
 
-beep_error beep_init();
+BeepError beep_init();
 
-beep_error beep_terminate();
+BeepError beep_terminate();
 
-beep_error beep_beep();
+BeepError beep_beep();
 
-beep_error beep_beep_at(float frequency);
+BeepError beep_beep_at(float frequency);
 
-const char* beep_get_error_message(beep_error error);
+const char* beep_get_error_message(BeepError error);
 
 #ifdef __cplusplus
 };
