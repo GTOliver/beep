@@ -12,22 +12,18 @@ BeepSynth::BeepSynth()
 {
 }
 
-void BeepSynth::prepare(ulong sample_rate, float beep_frequency, float attack, float decay)
+void BeepSynth::prepare(ulong sample_rate)
 {
     sample_rate_ = sample_rate;
 
-    auto oscillator = std::make_unique<SineOscillator>(beep_frequency, sample_rate);
+    auto attack_time = 10.0f;
+    auto decay_time = 200.0f;
 
-    float sample_duration_ms = 1000.0f / static_cast<float>(sample_rate);
+    auto oscillator = std::make_unique<SineOscillator>();
+    oscillator->prepare(sample_rate_);
 
-    auto attack_samples = static_cast<ulong>(attack / sample_duration_ms);
-    auto decay_samples = static_cast<ulong>(decay / sample_duration_ms);
-
-    auto attack_rate = 1.0f / static_cast<float>(attack_samples);
-    auto decay_rate = 1.0f / static_cast<float>(decay_samples);
-
-    voice_ = std::make_unique<OscillatorVoice>(std::move(oscillator), attack_rate, decay_rate);
-
+    voice_ = std::make_unique<OscillatorVoice>(std::move(oscillator), attack_time, decay_time);
+    voice_->prepare(sample_rate);
 }
 
 void BeepSynth::process(float* output_buffer, ulong buffer_size,
@@ -41,7 +37,7 @@ void BeepSynth::process(float* output_buffer, ulong buffer_size,
     bool beep_triggered = n_messages > 0;
 
     if (beep_triggered)
-        voice_->beep();
+        voice_->beep(beep_messages[0]);
 
     voice_->process(output_buffer, buffer_size);
 }

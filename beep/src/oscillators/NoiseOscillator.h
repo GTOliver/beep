@@ -14,8 +14,6 @@ public:
 
     void process(float* buffer, ulong buffer_size) override;
 
-    void reset() override;
-
 private:
     std::random_device random_device_;
     std::mt19937 random_generator_;

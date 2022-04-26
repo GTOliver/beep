@@ -16,7 +16,9 @@ class BeepSynth
 public:
     BeepSynth();
 
-    void prepare(ulong sample_rate, float beep_frequency, float attack, float decay);
+    //void prepare(ulong sample_rate, float beep_frequency, float attack, float decay);
+
+    void prepare(ulong sample_rate);
 
     void process(float* output_buffer, ulong buffer_size,
                  BeepMessage* beep_messages, int n_messages);

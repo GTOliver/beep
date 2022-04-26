@@ -7,7 +7,8 @@ namespace bb
 
 struct BeepMessage
 {
-    BeepTime timestamp_;
+    BeepTime timestamp;
+    float frequency;
 };
 
 } // namespace bb

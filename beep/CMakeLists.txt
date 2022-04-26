@@ -13,6 +13,7 @@ add_library(beep STATIC
         src/Gain.cpp
         src/Gain.h
         src/oscillators/Oscillator.h
+        src/oscillators/Oscillator.cpp
         src/oscillators/NoiseOscillator.h
         src/oscillators/NoiseOscillator.cpp
         src/oscillators/SineOscillator.cpp

@@ -18,7 +18,7 @@ class Beeper
 public:
     static Beeper& instance();
 
-    void prepare(ulong sample_rate, float beep_frequency, float attack, float decay);
+    void prepare(ulong sample_rate);
 
     void start();
 

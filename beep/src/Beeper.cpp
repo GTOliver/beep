@@ -22,10 +22,10 @@ Beeper::Beeper()
 {
 }
 
-void Beeper::prepare(ulong sample_rate, float beep_frequency, float attack, float decay)
+void Beeper::prepare(ulong sample_rate)
 {
     sample_rate_ = sample_rate;
-    synth_.prepare(sample_rate, beep_frequency, attack, decay);
+    synth_.prepare(sample_rate);
 }
 
 void Beeper::start()
@@ -70,7 +70,7 @@ void Beeper::terminate()
 
 void Beeper::beep()
 {
-    beep_collector_.add_beep(BeepMessage{get_now()});
+    beep_collector_.add_beep(BeepMessage{get_now(), 880.0f});
 }
 
 BeepTime Beeper::get_now()

@@ -14,9 +14,4 @@ void NoiseOscillator::process(float* buffer, ulong buffer_size)
         buffer[i] = random_dist_(random_generator_);
 }
 
-void NoiseOscillator::reset()
-{
-    // Nothing needs to be done to reset this
-}
-
 } // namespace bb
