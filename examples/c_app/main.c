@@ -1,4 +1,4 @@
-#include "beep_macros.h"
+#include "beep.h"
 
 #include "unistd.h"
 

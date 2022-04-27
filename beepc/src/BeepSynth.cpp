@@ -48,7 +48,7 @@ void BeepSynth::process(float* output_buffer, ulong buffer_size,
 
         int message_sample_index = static_cast<int>(fraction * static_cast<double>(buffer_size - 1));
 
-        // Process up to sample with beep in it
+        // Process up to sample with beepc in it
         process(output_buffer + current_position, message_sample_index - current_position);
         beep(beep_messages[i]);
     }

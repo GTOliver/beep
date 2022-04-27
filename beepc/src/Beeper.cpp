@@ -116,7 +116,7 @@ int Beeper::callback(
     BeepTime buffer_start_time = info->outputBufferDacTime;
     BeepTime buffer_end_emission_time = buffer_start_time + buffer_duration;
 
-    // Collect beep messages from the beep collector
+    // Collect beepc messages from the beepc collector
     int n_beeps = beep_collector_.get_beeps(beep_buffer_.data(), buffer_end_emission_time - *latency_);
 
     // Account for latency by augmenting the timestamps
@@ -124,7 +124,7 @@ int Beeper::callback(
         beep_buffer_[i].timestamp += *latency_;
     }
 
-    // Let the synth fill the output buffer based on the beep messages
+    // Let the synth fill the output buffer based on the beepc messages
     synth_.process(f_output_buffer, frames_per_buffer,
                    beep_buffer_.data(), n_beeps, buffer_start_time);
 

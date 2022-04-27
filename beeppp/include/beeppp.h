@@ -1,4 +1,4 @@
-#include "beep.h"
+#include "beepc.h"
 
 #include <exception>
 #include <string>

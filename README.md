@@ -11,8 +11,8 @@ using the macros is that they can be turned off at compile-time.
 
 ### Beep Macros
 
-To use beeps, link against the `beep::beep_macros` and include the
-`beep_macros.h` header.
+To use beeps, link against the `beep::beep` and include the
+`beep.h` header.
 
 This defines several macros which can be turned off at compile-time using the CMake option `-DBEEP=OFF`.
 
@@ -23,7 +23,7 @@ Before emitting any beeps, call the `BEEP_INIT()` macro, and call
 
 ### Beep C API
 
-To use the C API, link against the `beep::beep` target and include the `beep.h` header.
+To use the C API, link against the `beep::beepc` target and include the `beepc.h` header.
 
 ### Beep C++ API
 
