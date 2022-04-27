@@ -2,7 +2,7 @@
 
 Add noises to your code: for debugging or just to hear the rhythms of your creations.
 
-Beep can be turned off at compile-time without changing your code, and keeps your release builds free of bloat.
+Beep can be turned off at compile-time without changing your code.
 
 ## Usage
 
@@ -11,10 +11,8 @@ using the macros is that they can be turned off at compile-time.
 
 ### Beep Macros
 
-To use beeps, link against the `beep::beep` and include the
-`beep.h` header.
-
-This defines several macros which can be turned off at compile-time using the CMake option `-DBEEP=OFF`.
+To use the beep macros, include the `beep.h` header and link against the `beep::beep` target. The CMake
+option `-DBEEP=ON` must be provided to enable the beeps.
 
 Use the `BEEP()` macro throughout your code whenever you want to emit an audible beep.
 
