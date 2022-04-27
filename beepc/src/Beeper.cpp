@@ -14,7 +14,7 @@ Beeper& Beeper::instance()
 Beeper::Beeper()
         : sample_rate_{0},
           audio_stream_{nullptr},
-          latency_{nullptr},
+          padding_{0.5},
           beep_collector_{1024},
           beep_buffer_{1024},
           gain_{0.1}
@@ -43,9 +43,6 @@ void Beeper::start()
             this);
     check_pa_error(err);
 
-    const auto stream_info = Pa_GetStreamInfo(audio_stream_);
-    latency_ = &(stream_info->outputLatency);
-
     err = Pa_StartStream(audio_stream_);
     check_pa_error(err);
 }
@@ -57,7 +54,6 @@ void Beeper::stop()
         check_pa_error(err);
         err = Pa_CloseStream(audio_stream_);
         check_pa_error(err);
-        latency_ = nullptr;
     } catch (const PaException& error) {
         terminate();
         throw;
@@ -116,15 +112,15 @@ int Beeper::callback(
     BeepTime buffer_start_time = info->outputBufferDacTime;
     BeepTime buffer_end_emission_time = buffer_start_time + buffer_duration;
 
-    // Collect beepc messages from the beepc collector
-    int n_beeps = beep_collector_.get_beeps(beep_buffer_.data(), buffer_end_emission_time - *latency_);
+    // Collect beep messages from the beep collector
+    int n_beeps = beep_collector_.get_beeps(beep_buffer_.data(), buffer_end_emission_time - padding_);
 
-    // Account for latency by augmenting the timestamps
+    // Account for padding by augmenting the timestamps
     for (int i = 0; i < n_beeps; ++i) {
-        beep_buffer_[i].timestamp += *latency_;
+        beep_buffer_[i].timestamp += padding_;
     }
 
-    // Let the synth fill the output buffer based on the beepc messages
+    // Let the synth fill the output buffer based on the beep messages
     synth_.process(f_output_buffer, frames_per_buffer,
                    beep_buffer_.data(), n_beeps, buffer_start_time);
 

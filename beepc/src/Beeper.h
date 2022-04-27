@@ -56,7 +56,8 @@ private:
 
     ulong sample_rate_;
     PaStream* audio_stream_;
-    const PaTime* latency_;
+
+    PaTime padding_;
 
     BeepQueue beep_collector_;
     std::vector<BeepMessage> beep_buffer_;
