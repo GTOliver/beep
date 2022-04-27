@@ -25,7 +25,7 @@ void Oscillator::set_frequency(float frequency)
 void Oscillator::update_phase_change_per_sample()
 {
     if (sample_rate_ != 0)
-        phase_change_per_sample_ = (2.0f * static_cast<float>(M_PI) * frequency_) / static_cast<float>(sample_rate_);
+        phase_change_per_sample_ = (2.0f * static_cast<float>(B_PI) * frequency_) / static_cast<float>(sample_rate_);
 
 }
 

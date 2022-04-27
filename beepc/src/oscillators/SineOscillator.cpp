@@ -12,7 +12,7 @@ void SineOscillator::process(float* buffer, ulong buffer_size)
         phase_ += phase_change_per_sample_;
     }
 
-    phase_ = std::fmod(phase_, 2.0f * static_cast<float>(M_PI));
+    phase_ = std::fmod(phase_, 2.0f * static_cast<float>(B_PI));
 }
 
 } // namespace bb
